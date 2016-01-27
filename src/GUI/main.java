@@ -207,7 +207,10 @@ public class main extends javax.swing.JFrame {
         nVar.setEnabled(false);
         Simplex calculo = new Simplex((int)nVar.getValue(), tblElementos);
         calculo.impressao();
+        
         Integer[] pivo = calculo.buscaPivo();
+        calculo.pivoteamento(pivo);
+        calculo.impressao();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

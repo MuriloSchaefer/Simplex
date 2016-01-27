@@ -54,7 +54,7 @@ public class Simplex {
                 if(obj == null){
                     obj = 0;
                 }else if(j>0){
-                    Integer a = Integer.valueOf(obj.toString());
+                    Double a = Double.valueOf(obj.toString());
                     if(i==0 && j >0){
                         a = a*(-1);
                     }
@@ -99,21 +99,21 @@ public class Simplex {
     
     public Integer[] buscaPivo(){
         Integer[] pivo = new Integer[2];
-        int maisNegativo = 0;
+        Double maisNegativo = 0.00;
         for(int i=1; i<=tabela.getColumnCount()-2; i++){
-            Integer valor = Integer.valueOf(tabela.getValueAt(0, i).toString());
+            Double valor = Double.valueOf(tabela.getValueAt(0, i).toString());
             if(valor < maisNegativo){
                 maisNegativo = valor;
                 pivo[1] = i;
             }
         }
         int ColunaResposta = tabela.getColumnCount()-1;
-        Integer menorDiv=0;
+        Double menorDiv=0.00;
         for(int i=1; i<tabela.getRowCount(); i++){
-            Integer resposta = Integer.valueOf(tabela.getValueAt(i, ColunaResposta).toString());
-            Integer valor = Integer.valueOf(tabela.getValueAt(i, pivo[1]).toString());
+            Double resposta = Double.valueOf(tabela.getValueAt(i, ColunaResposta).toString());
+            Double valor = Double.valueOf(tabela.getValueAt(i, pivo[1]).toString());
             if(valor>0){
-                Integer div = resposta/valor;
+                Double div = resposta/valor;
                 if(i==1){
                     menorDiv = div;
                     pivo[0] = i;
@@ -128,8 +128,34 @@ public class Simplex {
         return pivo;
     }
     
-    public void pivoteamento(){
+    public void pivoteamento(Integer[] pivo){
+        int tamLinha = tabela.getColumnCount()-1;
+        Double valorPivo = Double.valueOf(tabela.getValueAt(pivo[0], pivo[1]).toString());
+        Object[] linhaPivo, linhaAntiga, linhaNova;
+        linhaPivo = new Object[tamLinha];
+        linhaNova = new Object[tamLinha];
+        linhaAntiga = new Object[tamLinha];
         
+        for(int i=1; i<=tamLinha; i++){
+            Double valor = Double.valueOf(tabela.getValueAt(pivo[0], i).toString());
+            linhaPivo[i-1] = valor/valorPivo;
+            tabela.setValueAt(linhaPivo[i-1], pivo[0], i);
+        }
+        
+        for(int i=0; i<tabela.getRowCount(); i++){
+            if(i!=pivo[0]){
+                Double aux = Double.valueOf(tabela.getValueAt(i, pivo[1]).toString());
+                Double fatorMult = -(aux/valorPivo);
+                for(int j=1; j<=tamLinha; j++){
+                    Double valorLinhaAntiga = Double.valueOf(tabela.getValueAt(i, j).toString());
+                    linhaAntiga[j-1] = valorLinhaAntiga;
+                    Double valorLinhaPivo = Double.valueOf(tabela.getValueAt(pivo[0], j).toString());
+                    linhaNova[j-1] = (fatorMult*valorLinhaPivo)+valorLinhaAntiga;
+                    tabela.setValueAt(linhaNova[j-1], i, j);
+                }
+                
+            }
+        }
     }
     
     public void impressao(){
