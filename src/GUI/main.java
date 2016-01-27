@@ -239,7 +239,10 @@ public class main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new main().setVisible(true);
+                main m = new main();
+                m.setTitle("Simplex");
+                m.setLocationRelativeTo(null);
+                m.setVisible(true);
             }
         });
     }
