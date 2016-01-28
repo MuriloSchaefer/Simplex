@@ -21,6 +21,7 @@ public class Simplex {
         this.nVar = nVar;        
         this.tabela = tabela;
         int nFolga = 0;
+        int nArtificial = 0;
         
         int colunaOp = tabela.getColumnCount()-2;
         for(int i=1; i<tabela.getRowCount(); i++){
@@ -28,6 +29,8 @@ public class Simplex {
             if (celula.equals("<=")){
                 nFolga++;
                 tabela.setValueAt("=", i, colunaOp);
+            } else if(celula.equals("=")){
+                
             }
         }
         int total = nVar+nFolga+2;
@@ -114,7 +117,7 @@ public class Simplex {
             Double valor = Double.valueOf(tabela.getValueAt(i, pivo[1]).toString());
             if(valor>0){
                 Double div = resposta/valor;
-                if(i==1){
+                if(menorDiv == 0.00){
                     menorDiv = div;
                     pivo[0] = i;
                 }
@@ -124,7 +127,8 @@ public class Simplex {
                 }
             }
         }
-        
+        String titulo = tabela.getModel().getColumnName(pivo[1]);
+        alteraBase(pivo[0], titulo);
         return pivo;
     }
     
@@ -158,6 +162,22 @@ public class Simplex {
         }
     }
     
+    public boolean verificaParada(){
+        int tamLinha = tabela.getColumnCount()-1;
+        for(int i =1; i<=tamLinha; i++){
+            Double aux = Double.valueOf(tabela.getValueAt(0, i).toString());
+            if (aux < 0.00){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public void alteraBase(int linha, String nome){
+        tabela.setValueAt(nome, linha, 0);
+    }
+    
+    
     public void impressao(){
         for(int i=0; i<tabela.getColumnCount(); i++){
             System.out.print(tabela.getModel().getColumnName(i) + "\t|");
@@ -173,6 +193,7 @@ public class Simplex {
             }       
             System.out.println();         
         }
+        System.out.println();
     }
 
     

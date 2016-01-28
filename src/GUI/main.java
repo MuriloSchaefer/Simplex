@@ -72,6 +72,7 @@ public class main extends javax.swing.JFrame {
         tblElementos = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         addRestricoes = new javax.swing.JButton();
+        rmvRestricao = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -111,6 +112,14 @@ public class main extends javax.swing.JFrame {
             }
         });
 
+        rmvRestricao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/remove.png"))); // NOI18N
+        rmvRestricao.setText("Restricão");
+        rmvRestricao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmvRestricaoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,6 +133,8 @@ public class main extends javax.swing.JFrame {
                         .addGap(3, 3, 3)
                         .addComponent(nVar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(rmvRestricao, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addRestricoes, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -137,7 +148,8 @@ public class main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(nVar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addRestricoes, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(addRestricoes, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rmvRestricao, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -204,14 +216,27 @@ public class main extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         addRestricoes.setEnabled(false);
+        rmvRestricao.setEnabled(false);
         nVar.setEnabled(false);
         Simplex calculo = new Simplex((int)nVar.getValue(), tblElementos);
         calculo.impressao();
         
-        Integer[] pivo = calculo.buscaPivo();
-        calculo.pivoteamento(pivo);
-        calculo.impressao();
+        while(!calculo.verificaParada()){
+            Integer[] pivo = calculo.buscaPivo();
+            calculo.pivoteamento(pivo);
+            calculo.impressao();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void rmvRestricaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvRestricaoActionPerformed
+        // TODO add your handling code here:
+        int l = tblElementos.getSelectedRow();
+        if(l>0){
+            DefaultTableModel dtm = (DefaultTableModel)tblElementos.getModel();
+            dtm.removeRow(l);
+            tblElementos.setModel(dtm);
+        }
+    }//GEN-LAST:event_rmvRestricaoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -257,6 +282,7 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner nVar;
+    private javax.swing.JButton rmvRestricao;
     private javax.swing.JTable tblElementos;
     // End of variables declaration//GEN-END:variables
 }
