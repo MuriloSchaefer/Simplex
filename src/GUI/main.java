@@ -53,7 +53,7 @@ public class main extends javax.swing.JFrame {
         MyTableModel dtm = new MyTableModel(data, columnNames); // novo tablemodel
         Object[] linha = {"Z"}; 
         dtm.addRow(linha); //adiciona a linha Z ao modelo criado
-
+        
         tblElementos.setModel(dtm); //atribui o modelo a tabela tblElementos
     }
 
@@ -73,6 +73,8 @@ public class main extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         addRestricoes = new javax.swing.JButton();
         rmvRestricao = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -120,6 +122,12 @@ public class main extends javax.swing.JFrame {
             }
         });
 
+        jTextPane1.setText("Não inserir restrição de não negatividade\na mesma esta implicita no modelo");
+        jTextPane1.setDisabledTextColor(new java.awt.Color(1, 1, 1));
+        jTextPane1.setDoubleBuffered(true);
+        jTextPane1.setEnabled(false);
+        jScrollPane2.setViewportView(jTextPane1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -137,7 +145,8 @@ public class main extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addRestricoes, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2)
+                        .addGap(18, 18, 18)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -153,7 +162,9 @@ public class main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -187,7 +198,7 @@ public class main extends javax.swing.JFrame {
             }
             MyTableModel novaDtm = new MyTableModel(data, columnNames);
             //dtm.isCellEditable(0, dtm.getColumnCount()-2);
-
+            
             tblElementos.setModel(novaDtm);
         } else{
             tblElementos.setVisible(false);
@@ -218,14 +229,16 @@ public class main extends javax.swing.JFrame {
         addRestricoes.setEnabled(false);
         rmvRestricao.setEnabled(false);
         nVar.setEnabled(false);
+        String txt="";
         Simplex calculo = new Simplex((int)nVar.getValue(), tblElementos);
-        calculo.impressao();
         
         while(!calculo.verificaParada()){
+            txt +="\n"+calculo.impressao();
             Integer[] pivo = calculo.buscaPivo();
             calculo.pivoteamento(pivo);
-            calculo.impressao();
         }
+            txt +="\n"+calculo.impressao();
+         new relatorio(txt).setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void rmvRestricaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmvRestricaoActionPerformed
@@ -281,6 +294,8 @@ public class main extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JSpinner nVar;
     private javax.swing.JButton rmvRestricao;
     private javax.swing.JTable tblElementos;

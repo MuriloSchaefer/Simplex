@@ -16,12 +16,17 @@ public class Simplex {
     
     JTable tabela;
     int nVar;
+    boolean fase2;
 
     public Simplex(int nVar, JTable tabela) {
         this.nVar = nVar;        
         this.tabela = tabela;
         int nFolga = 0;
+        
         int nArtificial = 0;
+        int nFolgaArtificial = 0;
+        fase2 = false;
+        
         
         int colunaOp = tabela.getColumnCount()-2;
         for(int i=1; i<tabela.getRowCount(); i++){
@@ -30,7 +35,13 @@ public class Simplex {
                 nFolga++;
                 tabela.setValueAt("=", i, colunaOp);
             } else if(celula.equals("=")){
-                
+                fase2 = true;
+                nArtificial++;
+            } else if(celula.equals(">=")){
+                fase2 = true;
+                nArtificial++;
+                nFolgaArtificial++;
+                tabela.setValueAt("=", i, colunaOp);
             }
         }
         int total = nVar+nFolga+2;
@@ -94,7 +105,6 @@ public class Simplex {
         }
         DefaultTableModel novaDtm = new DefaultTableModel(data, columnNames);
         //dtm.isCellEditable(0, dtm.getColumnCount()-2);
-        novaDtm.removeRow(tabela.getRowCount()-1);
         
         tabela.setModel(novaDtm);
         
@@ -177,23 +187,25 @@ public class Simplex {
         tabela.setValueAt(nome, linha, 0);
     }
     
-    
-    public void impressao(){
+    public String impressao(){
+       
+        String txt = "";
         for(int i=0; i<tabela.getColumnCount(); i++){
-            System.out.print(tabela.getModel().getColumnName(i) + "\t|");
+            txt += tabela.getModel().getColumnName(i) + "\t|";
         }
-        System.out.println(); 
+        txt += "\n"; 
         for(int i=0; i<tabela.getRowCount(); i++){
             for(int j=0; j<tabela.getColumnCount(); j++){
                 Object dado = tabela.getValueAt(i, j);
                 if (dado == null){
                     dado = "0";
                 }
-                System.out.print(dado.toString() + "\t|");
+                txt+= dado.toString() + "\t|";
             }       
-            System.out.println();         
+            txt += "\n";   
         }
-        System.out.println();
+        txt += "\n";  
+        return txt;
     }
 
     
