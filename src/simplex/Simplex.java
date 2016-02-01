@@ -21,11 +21,13 @@ public class Simplex {
     public Simplex(int nVar, JTable tabela) {
         this.nVar = nVar;        
         this.tabela = tabela;
-        int nFolga = 0;
-        
+        fase2 = false;
+    }
+    
+    public void organizarTabela(){
+        int nFolga = 0;        
         int nArtificial = 0;
         int nFolgaArtificial = 0;
-        fase2 = false;
         
         
         int colunaOp = tabela.getColumnCount()-2;
@@ -107,7 +109,6 @@ public class Simplex {
         //dtm.isCellEditable(0, dtm.getColumnCount()-2);
         
         tabela.setModel(novaDtm);
-        
     }
     
     public Integer[] buscaPivo(){
