@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import simplex.Simplex;
 
@@ -230,17 +231,46 @@ public class main extends javax.swing.JFrame {
             addRestricoes.setEnabled(false);
             rmvRestricao.setEnabled(false);
             nVar.setEnabled(false);
+            int i=0;
+            boolean semResultado = false;
             String txt="";
             Simplex calculo = new Simplex((int)nVar.getValue(), tblElementos);
             calculo.organizarTabela();
-            while(!calculo.verificaParada()){
+            Double resultado = 0.00;
+            int multipla = -1;
+            
+            while(!calculo.verificaParada() && i<100){
+                System.out.println(i);
                 txt +="\n"+calculo.impressao();
                 Integer[] pivo = calculo.buscaPivo();
                 calculo.pivoteamento(pivo);
+                multipla = calculo.verificaMultipla();
+                Double resultadoAux = calculo.getResultado();
+                if(resultadoAux < resultado){
+                   semResultado = true;
+                   break; 
+                } else {
+                    resultado = resultadoAux;
+                }
             }
+            
+             if(semResultado){
                 txt +="\n"+calculo.impressao();
+                txt +="\n\n Nenhum resultado encontrado para este modelo!";
+             } else if(i<100){
+                txt +="\n"+calculo.impressao();
+             }
+             if(multipla > 0){
+                txt += calculo.montarFuncao();
+                txt += "\n infinitos resultados, um proximo possivel valor é: ";
+                Integer[] pivo = calculo.buscaPivo(multipla);
+                calculo.pivoteamento(pivo);
+                tblElementos = calculo.getTable();
+                txt +="\n"+calculo.impressao();
+             }
+             txt += calculo.montarFuncao();
              new relatorio(txt).setVisible(true);
-            btnCalcular.setText("Novo modelo");
+             btnCalcular.setText("Novo modelo");
         } else{
             addRestricoes.setEnabled(true);
             rmvRestricao.setEnabled(true);
