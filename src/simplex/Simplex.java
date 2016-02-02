@@ -16,6 +16,7 @@ public class Simplex {
     
     JTable tabela;
     int nVar;
+    int total;
     boolean fase2;
 
     public Simplex(int nVar, JTable tabela) {
@@ -26,8 +27,6 @@ public class Simplex {
     
     public void organizarTabela(){
         int nFolga = 0;        
-        int nArtificial = 0;
-        int nFolgaArtificial = 0;
         
         
         int colunaOp = tabela.getColumnCount()-2;
@@ -36,17 +35,9 @@ public class Simplex {
             if (celula.equals("<=")){
                 nFolga++;
                 tabela.setValueAt("=", i, colunaOp);
-            } else if(celula.equals("=")){
-                fase2 = true;
-                nArtificial++;
-            } else if(celula.equals(">=")){
-                fase2 = true;
-                nArtificial++;
-                nFolgaArtificial++;
-                tabela.setValueAt("=", i, colunaOp);
             }
         }
-        int total = nVar+nFolga+2;
+        total = nVar+nFolga+2;
         
         String aux = ",";
         for (int j=0; j<nVar; j++){
@@ -230,7 +221,7 @@ public class Simplex {
         int n = tabela.getRowCount();
         int coluna = -1;
         boolean multipla = false;
-        for(int j = 1; j<=nVar; j++){
+        for(int j = 1; j<=total-2; j++){
             String variavel = tabela.getModel().getColumnName(j);
             boolean aux = false;
             for(int i = 1; i < tabela.getRowCount(); i++){
